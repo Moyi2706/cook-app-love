@@ -98,10 +98,6 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-
-            case R.id.add_recipe:
-                return true;
-
             case R.id.list_view:
                 this.switchListGridView(this.SWITCH_TO_LIST_VIEW);
                 return true;
