@@ -13,6 +13,11 @@ public class Ingrediente {
     public Ingrediente() {
     }
 
+    public Ingrediente(int cantidad, String nombre) {
+        this.cantidad = cantidad;
+        this.nombre = nombre;
+    }
+
     public int getCantidad() {
         return cantidad;
     }

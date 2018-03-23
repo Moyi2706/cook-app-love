@@ -20,13 +20,17 @@ import com.cookapp.moyiapps.cookapp.Clases.Receta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
     private List<Receta> recetas;
 
     private ListView listView;
     private GridView gridView;
+
+    //Items en el menu option
+    private MenuItem itemlistview;
+    private MenuItem itemgridview;
 
     private RecipeAdapter adapterListView;
     private RecipeAdapter adapterGridView;
@@ -54,8 +58,8 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
         this.listView.setOnItemClickListener(this);
         this.gridView.setOnItemClickListener(this);
 
-        this.adapterListView = new RecipeAdapter(this,recetas,R.layout.list_item);
-        this.adapterGridView = new RecipeAdapter(this,recetas,R.layout.grid_item);
+        this.adapterListView = new RecipeAdapter(this, recetas, R.layout.list_item);
+        this.adapterGridView = new RecipeAdapter(this, recetas, R.layout.grid_item);
 
         this.listView.setAdapter(adapterListView);
         this.gridView.setAdapter(adapterGridView);
@@ -66,14 +70,14 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
         registerForContextMenu(this.gridView);
 
 
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         this.clickRecipe(recetas.get(position));
     }
-    private void clickRecipe(Receta receta){
+
+    private void clickRecipe(Receta receta) {
 
     }
 
@@ -84,17 +88,29 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu,menu);
-
-
-
-
+        inflater.inflate(R.menu.option_menu, menu);
+        this.itemlistview = menu.findItem(R.id.list_view);
+        this.itemgridview = menu.findItem(R.id.grid_view);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+
+            case R.id.add_recipe:
+                return true;
+
+            case R.id.list_view:
+                this.switchListGridView(this.SWITCH_TO_LIST_VIEW);
+                return true;
+            case R.id.grid_view:
+                this.switchListGridView(this.SWITCH_TO_GRID_VIEW);
+                return true;
+            default:
+                return onOptionsItemSelected(item);
+        }
     }
 
     //Context Menu Borrar por ahora.
@@ -128,6 +144,25 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
     }
 
 
+    private void switchListGridView(int option) {
+        if (option == SWITCH_TO_LIST_VIEW) {
+            if (this.listView.getVisibility() == View.INVISIBLE) {
+                this.gridView.setVisibility(View.INVISIBLE);
+                this.itemgridview.setVisible(true);
+                this.listView.setVisibility(View.VISIBLE);
+                this.itemlistview.setVisible(false);
+            }
+        } else if (option == SWITCH_TO_GRID_VIEW) {
+            if (this.gridView.getVisibility() == View.INVISIBLE) {
+                this.listView.setVisibility(View.INVISIBLE);
+                this.itemlistview.setVisible(true);
+                this.gridView.setVisibility(View.VISIBLE);
+                this.itemgridview.setVisible(false);
+            }
+        }
+    }
+
+
     //Actions, get, add and delete
 
     private List<Receta> getAllRecetas() {
@@ -155,7 +190,6 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
         this.adapterListView.notifyDataSetChanged();
         this.adapterGridView.notifyDataSetChanged();
     }
-
 
 
 }

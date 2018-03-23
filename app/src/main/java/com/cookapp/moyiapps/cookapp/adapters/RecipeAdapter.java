@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cookapp.moyiapps.cookapp.Clases.Receta;
@@ -19,7 +20,7 @@ import java.util.List;
 public class RecipeAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Receta>recetas;
+    private List<Receta> recetas;
     private int layout;
 
 
@@ -46,42 +47,33 @@ public class RecipeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-
         // View Holder Pattern (Aumenta la performance al no llegar a relizar la llamada de find)
-
         ViewHolder holder;
 
-        if(convertView == null){
+        if (convertView == null) {
             //inflamos la vista con nuestro layour personaliado
-            LayoutInflater layoutInflater = LayoutInflater.from(this.context);
-            convertView =  layoutInflater.inflate(this.layout, null);
-
+            convertView = LayoutInflater.from(context).inflate(layout, null);
             holder = new ViewHolder();
-
-            holder.titleTextView = (TextView) convertView.findViewById(R.id.textview_titulo);
-           // holder.imagenImageView = (ImageView) convertView.findViewById(R.id.imageView);
-
+            holder.title = (TextView) convertView.findViewById(R.id.textview_titulo);
+            holder.imagen = (ImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(holder);
 
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final Receta currentrecipe = (Receta) getItem(position);
 
-        //Capturamos los datos de la lista
-        String currentTitle = recetas.get(position).getTitulo();
-       // Drawable imagen= recetas.get(position).getImagen();
 
-        holder.titleTextView.setText(currentTitle);
-       // holder.imagenImageView.setImageDrawable(imagen);
+        holder.title.setText(currentrecipe.getTitulo());
+        holder.imagen.setImageResource(currentrecipe.getImagen());
 
         return convertView;
     }
 
-    static class ViewHolder{
-        private TextView titleTextView;
-       // private ImageView imagenImageView;
-
+    static class ViewHolder {
+        private TextView title;
+        private ImageView imagen;
 
 
     }
