@@ -3,15 +3,14 @@ package com.cookapp.moyiapps.cookapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-
-import android.widget.GridView;
-import android.widget.ListView;
 
 import com.cookapp.moyiapps.cookapp.adapters.RecipeAdapter;
 import com.cookapp.moyiapps.cookapp.R;
@@ -20,30 +19,22 @@ import com.cookapp.moyiapps.cookapp.Clases.Receta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MisRecetas extends AppCompatActivity {
 
 
     private List<Receta> recetas;
 
-    private ListView listView;
-    private GridView gridView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView recycleview;
+    private RecipeAdapter recipeAdapter;
 
     //Items en el menu option
-    private MenuItem itemlistview;
-    private MenuItem itemgridview;
-
-    private RecipeAdapter adapterListView;
-    private RecipeAdapter adapterGridView;
-
-    private int counter = 0;
-    private final int SWITCH_TO_LIST_VIEW = 0;
-    private final int SWITCH_TO_GRID_VIEW = 1;
-
+    private MenuItem cambiarVista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mis_recetas);
+        setContentView(R.layout.mis_recetas;
 
 
         //Activar Flecha para atras
@@ -51,60 +42,34 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
 
         recetas = getAllRecetas();
 
-        this.listView = (ListView) findViewById(R.id.listview);
-        this.gridView = (GridView) findViewById(R.id.gridView);
+        recycleview = (RecyclerView) findViewById(R.id.recyclerView);
+        layoutManager = new LinearLayoutManager(this);
 
-        //Adjuntamos metodo click para ambos
-        this.listView.setOnItemClickListener(this);
-        this.gridView.setOnItemClickListener(this);
+        recipeAdapter = new RecipeAdapter(recetas, R.layout.recycle_view_recipe_item, this,new RecipeAdapter.OnItemClickListener(){
+        @Override
+            public void onItemClick(Receta receta, int position){
 
-        this.adapterListView = new RecipeAdapter(this, recetas, R.layout.list_item);
-        this.adapterGridView = new RecipeAdapter(this, recetas, R.layout.grid_item);
+        }};
 
-        this.listView.setAdapter(adapterListView);
-        this.gridView.setAdapter(adapterGridView);
-
-
-        //Registrar el context menu para ambos
-        registerForContextMenu(this.listView);
-        registerForContextMenu(this.gridView);
+            recycleview.setHasFixedSize(true);
+            recycleview.setLayoutManager(layoutManager);
+            recycleview.setAdapter(recipeAdapter);
 
 
     }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        this.clickRecipe(recetas.get(position));
-    }
-
-    private void clickRecipe(Receta receta) {
-
-    }
-
-
-    //Option Menu
+        //Option Menu
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu, menu);
-        this.itemlistview = menu.findItem(R.id.list_view);
-        this.itemgridview = menu.findItem(R.id.grid_view);
+        getMenuInflater().inflate( R.menu.option_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-            case R.id.list_view:
-                this.switchListGridView(this.SWITCH_TO_LIST_VIEW);
-                return true;
-            case R.id.grid_view:
-                this.switchListGridView(this.SWITCH_TO_GRID_VIEW);
-                return true;
-            default:
+             default:
                 return onOptionsItemSelected(item);
         }
     }
@@ -140,25 +105,6 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
     }
 
 
-    private void switchListGridView(int option) {
-        if (option == SWITCH_TO_LIST_VIEW) {
-            if (this.listView.getVisibility() == View.INVISIBLE) {
-                this.gridView.setVisibility(View.INVISIBLE);
-                this.itemgridview.setVisible(true);
-                this.listView.setVisibility(View.VISIBLE);
-                this.itemlistview.setVisible(false);
-            }
-        } else if (option == SWITCH_TO_GRID_VIEW) {
-            if (this.gridView.getVisibility() == View.INVISIBLE) {
-                this.listView.setVisibility(View.INVISIBLE);
-                this.itemlistview.setVisible(true);
-                this.gridView.setVisibility(View.VISIBLE);
-                this.itemgridview.setVisible(false);
-            }
-        }
-    }
-
-
     //Actions, get, add and delete
 
     private List<Receta> getAllRecetas() {
@@ -182,7 +128,7 @@ public class MisRecetas extends AppCompatActivity implements AdapterView.OnItemC
     }
 
     private void deleteReceta(int position) {
-        this.recetas.remove(position);
+        recetas.remove(position);
         this.adapterListView.notifyDataSetChanged();
         this.adapterGridView.notifyDataSetChanged();
     }
